@@ -1,0 +1,178 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
+import { PlaceholderMovie } from "../components/Placeholder";
+import { Video } from "../components/Video";
+
+const moviesURL = import.meta.env.VITE_API;
+const apiKey = import.meta.env.VITE_API_KEY;
+const imagesURL = import.meta.env.VITE_IMG;
+
+export interface MovieProps {
+    adult: boolean;
+    id: number;
+    original_title: string;
+    overview: string;
+    popularity: number;
+    poster_path: string;
+    backdrop_path: string;
+    release_date: string;
+    title: string;
+    vote_average: number;
+    vote_count: number;
+    runtime: string;
+    production_countries: [{
+        iso_3166_1: string;
+        name: string;
+    }];
+    genres: [{
+        id: number;
+        name: string;
+    }];
+    production_companies: [{
+        id: number;
+        logo_path: string;
+        name: string;
+        origin_country: string;
+    }]
+}
+
+const color = {
+    bad: '#d92360',
+    regular: '#d2d347',
+    good: '#2dcf7f',
+    dark_bad: '#561534',
+    dark_regular: '#423c14',
+    dark_good: '#21442b',
+    nd: '#666666',
+}
+
+export function Movie() {
+    const { id } = useParams();
+    const [movie, setMovie] = useState<MovieProps>();
+    const formatPtBr = new Intl.NumberFormat('pt-BR', { maximumSignificantDigits: 3 });
+
+    const getMovie = async (url: RequestInfo | URL) => {
+        const res = await fetch(url);
+        const data = await res.json();
+        setMovie(data);
+    };
+
+    useEffect(() => {
+        const movieUrl = `${moviesURL}${id}?${apiKey}&language=pt-BR&region=BR`;
+
+        getMovie(movieUrl);
+    }, []);
+
+    return (
+        <section className="pt-24">
+            {movie ?
+                (
+                    <>
+                        <div className={`movie-bg`} style={{ backgroundImage: `url(${imagesURL + 'original' + movie.backdrop_path})` }} />
+                        <div className="w-full flex notebook:flex-row flex-col gap-16 mb-20">
+                            <div className="notebook:w-1/3 w-full mx-auto">
+                                <img
+                                    src={imagesURL + 'w780' + movie.poster_path}
+                                    className="max-w-[420px] w-full mx-auto h-auto rounded-lg"
+                                    alt=""
+                                />
+                                <div className="mt-5 flex flex-row gap-5 items-center justify-center">
+                                    <div className="w-24 h-24">
+                                        <CircularProgressbar
+                                            value={movie?.vote_average}
+                                            maxValue={10}
+                                            text={movie.vote_average != 0 ? movie?.vote_average.toFixed(1) : 'ND'}
+                                            styles={buildStyles({
+                                                textSize: '30px',
+                                                pathTransitionDuration: 0.5,
+                                                pathColor: `${movie?.vote_average <= 4.9 ? color.bad :
+                                                    movie?.vote_average <= 6.9 ? color.regular :
+                                                        color.good}`,
+                                                textColor: '#f4f4f5',
+                                                trailColor: `${movie?.vote_average === 0 ? color.nd :
+                                                    movie?.vote_average <= 4.9 ? color.dark_bad :
+                                                        movie?.vote_average <= 6.9 ? color.dark_regular :
+                                                            color.dark_good}`,
+                                            })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <p className="text-xl mb-2">
+                                            {formatPtBr.format(movie.vote_count)} <span className="text-base text-zinc-500">votos</span>
+                                        </p>
+                                        <p className="text-xl">
+                                            {movie.popularity} <span className="text-base text-zinc-500">popularidade</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="notebook:w-2/3 w-full notebook:pt-20 pt-5 notebook:max-w-2xl">
+                                <h1 className="text-3xl font-semibold mb-1">
+                                    {movie.title}
+                                </h1>
+                                <p className="text-lg text-zinc-500 mb-5">
+                                    {movie.original_title}
+                                </p>
+                                <p className="mb-10 text-zinc-300">
+                                    {movie.overview}
+                                </p>
+                                <h2 className="text-2xl font-semibold mb-3">
+                                    Detalhes
+                                </h2>
+                                <div className="w-full flex flex-col divide-y-2 divide-zinc-800">
+                                    <div className="flex flex-row justify-between items-center py-4">
+                                        <span className="text-zinc-400">
+                                            Gênero
+                                        </span>
+                                        <ul className="flex flex-row gap-3">
+                                            {movie.genres.map((genre, key) => (
+                                                <li className="rounded-md py-2 px-3 text-xs bg-zinc-800" key={key} id={String(genre.id)}>{genre.name}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div className="flex flex-row justify-between items-center py-4">
+                                        <span className="text-zinc-400">
+                                            Lançamento
+                                        </span>
+                                        <span>
+                                            {new Date(movie.release_date).toLocaleDateString('pt-BR')}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-row justify-between items-center py-4">
+                                        <span className="text-zinc-400">
+                                            Origem
+                                        </span>
+                                        <span>
+                                            {movie.production_countries[0].name} | {movie.production_countries[0].iso_3166_1}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-row justify-between items-center py-4">
+                                        <span className="text-zinc-400">
+                                            Duração
+                                        </span>
+                                        <span>
+                                            {movie.runtime} min
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {id &&
+                            <section className="w-full flex tablet:flex-row flex-col relative gap-4">
+                                <Video movieId={id} />
+                            </section>
+                        }
+                    </>
+                )
+                :
+                (
+                    <PlaceholderMovie />
+                )
+            }
+        </section>
+    );
+}
