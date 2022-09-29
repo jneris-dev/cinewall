@@ -67,9 +67,9 @@ export function Movie() {
     };
 
     function formatCurrency(value: number) {
-        return value.toLocaleString("pt-BR", {
+        return value.toLocaleString("en-US", {
             style: "currency",
-            currency: "BRL",
+            currency: "USD",
         });
     };
 
@@ -167,15 +167,17 @@ export function Movie() {
                                             Orçamento
                                         </span>
                                         <span>
-                                            {formatCurrency(movie.budget)}
+                                            {movie.budget != 0 ? formatCurrency(movie.budget) : '-'}
                                         </span>
                                     </div>
                                     <div className="flex flex-row justify-between items-center py-4">
                                         <span className="text-zinc-400">
                                             Receita
                                         </span>
-                                        <span>
-                                            {formatCurrency(movie.revenue)}
+                                        <span className={`${movie.revenue > movie.budget && movie.budget != 0 ? 'text-green-500' :
+                                                movie.revenue < movie.budget && movie.budget != 0 && 'text-red-500'
+                                            }`}>
+                                            {movie.revenue != 0 ? formatCurrency(movie.revenue) : '-'}
                                         </span>
                                     </div>
                                     <div className="flex flex-row justify-between items-center py-4">
