@@ -56,8 +56,16 @@ export function PlaceholderMovie() {
                         <div className="h-4 rounded-full bg-zinc-800 w-[80px]" />
                     </div>
                     <div className="flex flex-row justify-between items-center py-4">
+                        <div className="h-4 rounded-full bg-zinc-800 w-[86px]" />
+                        <div className="h-4 rounded-full bg-zinc-800 w-[130px]" />
+                    </div>
+                    <div className="flex flex-row justify-between items-center py-4">
+                        <div className="h-4 rounded-full bg-zinc-800 w-[97px]" />
+                        <div className="h-4 rounded-full bg-zinc-800 w-[80px]" />
+                    </div>
+                    <div className="flex flex-row justify-between items-center py-4">
                         <div className="h-4 rounded-full bg-zinc-800 w-[56px]" />
-                        <div className="h-4 rounded-full bg-zinc-800 w-[150px]" />
+                        <div className="h-4 rounded-full bg-zinc-800 w-[140px]" />
                     </div>
                     <div className="flex flex-row justify-between items-center py-4">
                         <div className="h-4 rounded-full bg-zinc-800 w-[65px]" />

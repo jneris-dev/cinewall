@@ -30,32 +30,36 @@ export interface MovieProps {
 
 export function Card({ movie }: MovieProps) {
     return (
-        <div className="desktop:w-1/4 notebook:w-1/3 mobile:w-1/2 w-full px-3">
-            <div className="p-4 bg-zinc-800 rounded-lg flex-1 h-full flex flex-col">
-                <img
-                    src={imagesURL + 'w780' + movie.poster_path}
-                    alt={movie.title}
-                    title={movie.title}
-                    className="max-w-full h-auto rounded-lg"
-                />
-                <div className="p-4 flex-auto">
-                    <p className="text-xl font-semibold mb-1 truncate">
-                        {movie.title}
-                    </p>
-                    <p className="text-sm font-semibold mb-4 truncate text-zinc-500">
-                        {movie.original_title}
-                    </p>
-                    <span className="flex flex-row gap-2 items-center mb-2 text-lg">
-                        <Star size={20} weight="fill" className="text-yellow-500" />
-                        {movie.vote_average != 0 ? movie.vote_average : 'ND'}
-                    </span>
+        <>
+            {movie.poster_path &&
+                <div className="desktop:w-1/4 notebook:w-1/3 mobile:w-1/2 w-full px-3">
+                    <div className="p-4 bg-zinc-800 rounded-lg flex-1 h-full flex flex-col">
+                        <img
+                            src={imagesURL + 'w780' + movie.poster_path}
+                            alt={movie.title}
+                            title={movie.title}
+                            className="max-w-full h-auto rounded-lg"
+                        />
+                        <div className="p-4 flex-auto">
+                            <p className="text-xl font-semibold mb-1 truncate">
+                                {movie.title}
+                            </p>
+                            <p className="text-sm font-semibold mb-4 truncate text-zinc-500">
+                                {movie.original_title}
+                            </p>
+                            <span className="flex flex-row gap-2 items-center mb-2 text-lg">
+                                <Star size={20} weight="fill" className="text-yellow-500" />
+                                {movie.vote_average != 0 ? movie.vote_average : 'ND'}
+                            </span>
+                        </div>
+                        <Link to={`/movie/${movie.id}`}>
+                            <button className="bg-red-600 w-full h-12 rounded-md hover:bg-red-700 text-zinc-100 transition-colors">
+                                Mais detalhes
+                            </button>
+                        </Link>
+                    </div>
                 </div>
-                <Link to={`/movie/${movie.id}`}>
-                    <button className="bg-red-600 w-full h-12 rounded-md hover:bg-red-700 text-zinc-100 transition-colors">
-                        Mais detalhes
-                    </button>
-                </Link>
-            </div>
-        </div>
+            }
+        </>
     );
 }

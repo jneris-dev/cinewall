@@ -11,7 +11,7 @@ function App() {
         <BrowserRouter>
             <main>
                 <Navbar />
-                <section className="w-full container h-auto px-3 mx-auto notebook:pt-16 pt-[152px]">
+                <section className="w-full container h-auto px-3 mx-auto notebook:pt-16 pt-[152px] min-h-[calc(100vh-204px)]">
                     <Router />
                 </section>
                 <Footer />

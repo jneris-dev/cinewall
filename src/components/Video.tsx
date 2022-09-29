@@ -33,30 +33,39 @@ export function Video({ movieId }: Props) {
 
     return (
         <>
-            {video ?
-                video.map((video, key) =>
-                    <div className="tablet:w-1/2 w-full" key={key}>
-                        <div className="max-w-[560px] max-h-[316px] mx-auto">
-                            <div className="relative block h-0 p-0 overflow-hidden pb-[56.25%]">
-                                <iframe
-                                    width="560"
-                                    height="315"
-                                    src={`https://www.youtube.com/embed/${video.key}?rel=0`}
-                                    title="YouTube video player"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                    className="absolute inset-0 border-0"
-                                />
-                            </div>
-                        </div>
+            {video.length > 0 &&
+                <section className="w-full">
+                    <h2 className="text-2xl font-semibold mb-8 pl-11">
+                        Mídia
+                    </h2>
+                    <div className="w-full flex tablet:flex-row flex-col relative gap-4">
+                        {video ?
+                            video.map((video, key) =>
+                                <div className="tablet:w-1/2 w-full" key={key}>
+                                    <div className="max-w-[560px] max-h-[316px] mx-auto">
+                                        <div className="relative block h-0 p-0 overflow-hidden pb-[56.25%]">
+                                            <iframe
+                                                width="560"
+                                                height="315"
+                                                src={`https://www.youtube.com/embed/${video.key}?rel=0`}
+                                                title="YouTube video player"
+                                                frameBorder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                                className="absolute inset-0 border-0"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                            :
+                            <>
+                                <PlaceholderVideo />
+                                <PlaceholderVideo />
+                            </>
+                        }
                     </div>
-                )
-                :
-                <>
-                    <PlaceholderVideo />
-                    <PlaceholderVideo />
-                </>
+                </section>
             }
         </>
     );

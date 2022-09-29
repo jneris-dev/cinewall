@@ -7,6 +7,7 @@ import { Movie } from "../pages/Movie";
 import { TopMovies } from "../pages/TopMovies";
 import { Upcoming } from "../pages/Upcoming";
 import { NowPlaying } from "../pages/NowPlaying";
+import { Search } from "../pages/Search";
 
 export function Router() {
     return (
@@ -18,6 +19,7 @@ export function Router() {
                 <Route path="/top-rated" element={<TopMovies />} />
                 <Route path="/upcoming" element={<Upcoming />} />
                 <Route path="/now-playing" element={<NowPlaying />} />
+                <Route path="/search" element={<Search />} />
                 <Route path="/movie/:id" element={<Movie />} />
             </Routes>
         </ScrollToTop>

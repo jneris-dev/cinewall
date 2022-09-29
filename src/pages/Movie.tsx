@@ -6,6 +6,7 @@ import 'react-circular-progressbar/dist/styles.css';
 
 import { PlaceholderMovie } from "../components/Placeholder";
 import { Video } from "../components/Video";
+import { tabTitle } from "../util/seo";
 
 const moviesURL = import.meta.env.VITE_API;
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -15,6 +16,8 @@ export interface MovieProps {
     adult: boolean;
     id: number;
     original_title: string;
+    budget: number;
+    revenue: number;
     overview: string;
     popularity: number;
     poster_path: string;
@@ -55,10 +58,19 @@ export function Movie() {
     const [movie, setMovie] = useState<MovieProps>();
     const formatPtBr = new Intl.NumberFormat('pt-BR', { maximumSignificantDigits: 3 });
 
+    if (movie?.title) { tabTitle(movie.title) }
+
     const getMovie = async (url: RequestInfo | URL) => {
         const res = await fetch(url);
         const data = await res.json();
         setMovie(data);
+    };
+
+    function formatCurrency(value: number) {
+        return value.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        });
     };
 
     useEffect(() => {
@@ -152,6 +164,22 @@ export function Movie() {
                                     </div>
                                     <div className="flex flex-row justify-between items-center py-4">
                                         <span className="text-zinc-400">
+                                            Orçamento
+                                        </span>
+                                        <span>
+                                            {formatCurrency(movie.budget)}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-row justify-between items-center py-4">
+                                        <span className="text-zinc-400">
+                                            Receita
+                                        </span>
+                                        <span>
+                                            {formatCurrency(movie.revenue)}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-row justify-between items-center py-4">
+                                        <span className="text-zinc-400">
                                             Duração
                                         </span>
                                         <span>
@@ -161,11 +189,7 @@ export function Movie() {
                                 </div>
                             </div>
                         </div>
-                        {id &&
-                            <section className="w-full flex tablet:flex-row flex-col relative gap-4">
-                                <Video movieId={id} />
-                            </section>
-                        }
+                        {id && <Video movieId={id} />}
                     </>
                 )
                 :

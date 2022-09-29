@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { List } from "phosphor-react";
-import { NavLink } from "react-router-dom";
+
+import { NavLink, useNavigate } from "react-router-dom";
 import { NavLinkMenu } from "./NavLinkMenu";
+
+import Logo from "./Logo";
 
 export function Navbar() {
     const [openMenu, setOpenMenu] = useState(false);
     const [windowSize, setWindowSize] = useState(getWindowSize());
+    const [search, setSearch] = useState('');
+    const navigate = useNavigate();
 
     function toggleMenu() {
         setOpenMenu(!openMenu);
@@ -15,6 +20,15 @@ export function Navbar() {
         const { innerWidth, innerHeight } = window;
         return { innerWidth, innerHeight };
     }
+
+    function handleSubmit(event: FormEvent) {
+        event.preventDefault();
+
+        if (!search) return;
+
+        navigate(`/search?q=${search}`, { replace: true });
+        setSearch('');
+    };
 
     useEffect(() => {
         function handleWindowResize() {
@@ -31,12 +45,12 @@ export function Navbar() {
     return (
         <>
             <nav className="w-full h-auto bg-zinc-800 flex flex-row justify-between items-center notebook:px-10 px-5 py-4 notebook:gap-8 gap-5 tablet:relative fixed z-20">
-                <p className="text-3xl font-bold">
+                <div>
                     <NavLink to={`/`}>
-                        Cine<span className="text-red-700">Wall</span>
+                        <Logo width="225px" height="35px" />
                     </NavLink>
-                </p>
-                <div className={`tablet:flex tablet:flex-row notebook:gap-8 tablet:gap-5 flex-1 justify-end items-center ${openMenu && windowSize.innerWidth <= 992 ? 'absolute top-full mt-5 w-full left-0 flex flex-col px-3' : !openMenu && 'hidden'}`}>
+                </div>
+                <div className={`tablet:flex tablet:flex-row notebook:gap-8 tablet:gap-5 flex-1 justify-end items-center ${openMenu && windowSize.innerWidth <= 992 ? 'absolute top-full mt-5 w-full left-0 flex flex-col px-3' : openMenu === false && 'hidden'}`}>
                     <ul className={`flex flex-1 tablet:flex-row items-center justify-end notebook:gap-8 tablet:gap-3 tablet:order-1 order-2 ${openMenu && windowSize.innerWidth <= 992 && 'w-full flex-col bg-zinc-800 py-5 rounded gap-3 px-3 max-w-[600px] mt-4'}`}>
                         <li className="contents">
                             <NavLinkMenu
@@ -87,9 +101,9 @@ export function Navbar() {
                             </li>
                         }
                     </ul>
-                    <div className="flex-1 tablet:max-w-sm max-w-[600px] tablet:order-2 order-1 w-full">
+                    <form className="flex-1 notebook:max-w-sm tablet:max-w-[300px] max-w-[600px] tablet:order-2 order-1 w-full" onSubmit={handleSubmit}>
                         <label
-                            htmlFor="default-search"
+                            htmlFor="search"
                             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
                         >
                             Pesquisar
@@ -97,8 +111,10 @@ export function Navbar() {
                         <div className="relative">
                             <input
                                 type="search"
-                                id="default-search"
+                                id="search"
                                 placeholder="Buscar Filme..."
+                                onChange={(e) => setSearch(e.target.value)}
+                                value={search}
                                 className="block p-4 w-full text-sm text-zinc-100 bg-zinc-700 rounded-lg border border-zinc-700 outline-none focus:border-red-500"
                             />
                             <button
@@ -108,7 +124,7 @@ export function Navbar() {
                                 Buscar
                             </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div className="flex flex-row tablet:gap-8 gap-4 items-center">
                     <button
