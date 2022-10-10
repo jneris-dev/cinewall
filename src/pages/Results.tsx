@@ -1,11 +1,11 @@
-import { useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { ListMovies } from "../components/ListMovies";
 import { tabTitle } from "../util/seo";
 
-export function Search() {
-    const [searchParams] = useSearchParams();
-    const query = searchParams.get("q");
+export function Results() {
+    const { search } = useLocation();
+    const query = new URLSearchParams(search).get("s");
 
     tabTitle(`Resultados para: ${query}`)
 

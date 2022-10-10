@@ -26,8 +26,8 @@ export function Navbar() {
 
         if (!search) return;
 
-        navigate(`/search?q=${search}`, { replace: true });
-        setSearch('');
+        navigate(`/results?s=${search}`);
+        setSearch('')
     };
 
     useEffect(() => {
