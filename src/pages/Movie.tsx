@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 import { PlaceholderMovie } from "../components/Placeholder";
-import { Video } from "../components/Video";
 import { tabTitle } from "../util/seo";
 
 const moviesURL = import.meta.env.VITE_API;
@@ -55,6 +54,7 @@ const color = {
 
 export function Movie() {
     const { id } = useParams();
+
     const [movie, setMovie] = useState<MovieProps>();
     const formatPtBr = new Intl.NumberFormat('pt-BR', { maximumSignificantDigits: 3 });
 
@@ -140,9 +140,18 @@ export function Movie() {
                                         <span className="text-zinc-400">
                                             Gênero
                                         </span>
-                                        <ul className="flex flex-row gap-3">
+                                        <ul className="flex flex-row flex-wrap gap-3 max-w-[50%] justify-end">
                                             {movie.genres.map((genre, key) => (
-                                                <li className="rounded-md py-2 px-3 text-xs bg-zinc-800" key={key} id={String(genre.id)}>{genre.name}</li>
+                                                <Link
+                                                    className="rounded-md py-2 px-3 text-xs bg-zinc-800 hover:ring-1 hover:ring-zinc-800 hover:ring-offset-1 hover:ring-offset-zinc-900" key={key} id={String(genre.id)}
+                                                    to={`/category/${genre.id}`}
+                                                    state={{
+                                                        id: genre.id,
+                                                        title: genre.name
+                                                    }}
+                                                >
+                                                    {genre.name}
+                                                </Link>
                                             ))}
                                         </ul>
                                     </div>
@@ -175,7 +184,7 @@ export function Movie() {
                                             Receita
                                         </span>
                                         <span className={`${movie.revenue > movie.budget && movie.budget != 0 ? 'text-green-500' :
-                                                movie.revenue < movie.budget && movie.budget != 0 && 'text-red-500'
+                                            movie.revenue < movie.budget && movie.budget != 0 && 'text-red-500'
                                             }`}>
                                             {movie.revenue != 0 ? formatCurrency(movie.revenue) : '-'}
                                         </span>
@@ -191,7 +200,6 @@ export function Movie() {
                                 </div>
                             </div>
                         </div>
-                        {id && <Video movieId={id} />}
                     </>
                 )
                 :

@@ -3,7 +3,7 @@ import { NavLink, NavLinkProps } from "react-router-dom";
 interface NavLinkMenuProps extends NavLinkProps {
     to: string;
     window_size: number;
-    setToggleMenu: () => void;
+    setToggleMenu: (value: boolean) => void;
     openMenu: boolean;
     label: string;
 }
@@ -13,8 +13,8 @@ export function NavLinkMenu({ to, window_size, setToggleMenu, openMenu, label, .
         <NavLink
             to={to}
             {...rest}
-            className={({ isActive }) => `transition-colors cursor-pointer border-b-2 ${openMenu && window_size <= 992 && 'py-4 w-full text-center rounded block'}` + (isActive && window_size > 992 ? ' border-red-700' : isActive && window_size <= 992 ? ' bg-red-700 text-zinc-100 border-red-700' : ' text-zinc-400 hover:text-zinc-100 border-zinc-800')}
-            onClick={setToggleMenu}
+            className={({ isActive }) => `transition-colors cursor-pointer p-4 rounded ${isActive ? 'bg-red-600 hover:bg-red-700' : 'hover:bg-zinc-700'}`}
+            onClick={() => setToggleMenu(false)}
         >
             {label}
         </NavLink>
