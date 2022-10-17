@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { tabTitle } from "../util/seo";
 import { ListMovies } from "../components/ListMovies";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const genreURL = import.meta.env.VITE_GENRE;
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -41,7 +41,7 @@ export function Categories() {
     }
 
     useEffect(() => {
-        const categoriesURL = `${genreURL}/list?${apiKey}&language=pt-BR&region=BR`;
+        const categoriesURL = `${genreURL}list?${apiKey}&language=pt-BR`;
         getCategories(categoriesURL);
     }, []);
 
