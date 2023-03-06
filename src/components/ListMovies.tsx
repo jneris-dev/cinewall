@@ -49,8 +49,10 @@ export function ListMovies(props: ListMoviesProps) {
     }, [props.type_list]);
 
     useEffect(() => {
-        const searchWithQueryURL = `${searchURL}?${apiKey}&query=${props.query}&language=pt-BR&region=BR`;
-        getSearchedMovies(searchWithQueryURL);
+        if (props.query) {
+            const searchWithQueryURL = `${searchURL}?${apiKey}&query=${props.query}&language=pt-BR&region=BR`;
+            getSearchedMovies(searchWithQueryURL);
+        }
     }, [props.query]);
 
     useEffect(() => {
