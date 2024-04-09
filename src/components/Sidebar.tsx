@@ -85,25 +85,6 @@ export function Sidebar({ toggleMenu, stateMenu }: SidebarProps) {
                         />
                     </div>
                 </div>
-                <div className="flex-auto flex items-end py-8 px-4">
-                    <div className="flex flex-row gap-3">
-                        <figure className="w-14 h-14 rounded-full overflow-hidden">
-                            <img
-                                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                                className="max-w-full h-auto"
-                                alt=""
-                            />
-                        </figure>
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-xl font-semibold">
-                                User
-                            </strong>
-                            <span className="text-zinc-500">
-                                user@email.com
-                            </span>
-                        </div>
-                    </div>
-                </div>
             </aside>
             <div
                 className={`w-full h-screen fixed bg-zinc-900 bg-opacity-60 cursor-pointer transition-all

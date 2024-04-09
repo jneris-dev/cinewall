@@ -49,7 +49,7 @@ export function Card({ movie }: MovieProps) {
                             </p>
                             <span className="flex flex-row gap-2 items-center mb-2 text-lg">
                                 <Star size={20} weight="fill" className="text-yellow-500" />
-                                {movie.vote_average != 0 ? movie.vote_average : 'ND'}
+                                {movie.vote_average != 0 ? +(movie.vote_average).toFixed(1) : 'ND'}
                             </span>
                         </div>
                         <Link to={`/movie/${movie.id}`}>

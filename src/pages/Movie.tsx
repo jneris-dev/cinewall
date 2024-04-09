@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -54,6 +54,7 @@ const color = {
 
 export function Movie() {
     const { id } = useParams();
+    let navigate = useNavigate()
 
     const [movie, setMovie] = useState<MovieProps>();
     const formatPtBr = new Intl.NumberFormat('pt-BR', { maximumSignificantDigits: 3 });
@@ -122,7 +123,13 @@ export function Movie() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="notebook:w-2/3 w-full notebook:pt-20 pt-5 notebook:max-w-2xl">
+                            <div className="notebook:w-2/3 w-full notebook:pt-10 pt-5 notebook:max-w-2xl">
+                                <button
+                                    className="mb-2"
+                                    onClick={() => navigate(-1)}
+                                >
+                                    &#x21B6; Voltar
+                                </button>
                                 <h1 className="text-3xl font-semibold mb-1">
                                     {movie.title}
                                 </h1>

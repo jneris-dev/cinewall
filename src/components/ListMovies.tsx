@@ -56,7 +56,7 @@ export function ListMovies(props: ListMoviesProps) {
     }, [props.query]);
 
     useEffect(() => {
-        const currentCategoryURL = `${discovery}?${apiKey}&language=pt-BR&region=BR&with_genres=${props.genres}`;
+        const currentCategoryURL = `${discovery}?${apiKey}&language=pt-BR&region=BR${props.genres ? '&with_genres=' + props.genres : ''}`;
         getMoviesByCategory(currentCategoryURL);
     }, [props.genres]);
 
@@ -75,7 +75,7 @@ export function ListMovies(props: ListMoviesProps) {
                     <div className="mx-3">
                         <p>Não foram encontrados filmes que correspondam aos seus critérios de busca.</p>
                     </div>
-                    : topMovies.length === 0 || moviesByCategory.length === 0 &&
+                    : topMovies && topMovies.length === 0 || moviesByCategory && moviesByCategory.length === 0 &&
                     <>
 
                         <PlaceholderCard />
