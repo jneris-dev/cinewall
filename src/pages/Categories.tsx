@@ -41,7 +41,7 @@ export function Categories() {
     }
 
     useEffect(() => {
-        const categoriesURL = `${genreURL}list?${apiKey}&language=pt-BR`;
+        const categoriesURL = `${genreURL}/list?${apiKey}&language=pt-BR`;
         getCategories(categoriesURL);
     }, []);
 
