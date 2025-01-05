@@ -30,32 +30,48 @@ export function ListMovies(props: ListMoviesProps) {
         {} as ResponseProps
     );
     const [paginated, setPaginated] = useState<number>(1);
+    const [loading, setLoading] = useState(true)
 
     const getTopMovies = async (url: RequestInfo | URL) => {
         const res = await fetch(url);
         const data = await res.json();
 
-        if (data.success && data.success == false)
+        if (data.success && data.success == false) {
             setTopMovies({} as ResponseProps);
-        else setTopMovies(data);
+            setLoading(false)
+        }
+        else {
+            setTopMovies(data);
+            setLoading(false)
+        }
     };
 
     const getSearchedMovies = async (url: RequestInfo | URL) => {
         const res = await fetch(url);
         const data = await res.json();
 
-        if (data.success && data.success == false)
+        if (data.success && data.success == false) {
             setSearchMovies({} as ResponseProps);
-        else setSearchMovies(data);
+            setLoading(false)
+        }
+        else {
+            setSearchMovies(data);
+            setLoading(false)
+        }
     };
 
     const getMoviesByCategory = async (url: RequestInfo | URL) => {
         const res = await fetch(url);
         const data = await res.json();
 
-        if (data.success && data.success == false)
+        if (data.success && data.success == false) {
             setMoviesByCategory({} as ResponseProps);
-        else setMoviesByCategory(data);
+            setLoading(false)
+        }
+        else {
+            setMoviesByCategory(data);
+            setLoading(false)
+        }
     };
 
     useEffect(() => {
@@ -87,22 +103,23 @@ export function ListMovies(props: ListMoviesProps) {
                 {props.title}
             </h1>
             <div className="flex flex-row flex-wrap -mx-3 gap-y-7">
-                {props.query
-                    ? searchMovies.results.length > 0 &&
+                {props.query && !loading
+                    ? searchMovies.results && searchMovies.results.length > 0 &&
                       searchMovies.results.map((item, key) => (
                           <Card key={key} movie={item} />
                       ))
-                    : props.type_list
-                    ? topMovies.results &&
-                      topMovies.results.length > 0 &&
+                : props.type_list
+                    ? topMovies.results && topMovies.results.length > 0 &&
                       topMovies.results.map((item, key) => (
                           <Card key={key} movie={item} />
                       ))
-                    : props.genres &&
-                      moviesByCategory.results.length > 0 &&
-                      moviesByCategory.results.map((item, key) => (
+                : props.genres &&
+                    moviesByCategory.results && moviesByCategory.results.length > 0 &&
+                    moviesByCategory.results.map((item, key) => (
                           <Card key={key} movie={item} />
-                      ))}
+                      ))
+                }
+
                 {Object.keys(searchMovies).length > 0 &&
                 searchMovies.results.length < 1 &&
                 props.query ? (
