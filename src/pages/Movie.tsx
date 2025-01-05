@@ -85,13 +85,14 @@ export function Movie() {
             {movie ?
                 (
                     <>
-                        <div className={`movie-bg`} style={{ backgroundImage: `url(${imagesURL + 'original' + movie.backdrop_path})` }} />
+                        <div className={`movie-bg`} style={{ backgroundImage: `url(${movie.backdrop_path ? imagesURL + 'original' + movie.backdrop_path : `https://placehold.co/3840x2160/3f3f46/FFF?text=${encodeURIComponent(movie.title)}`})` }} />
                         <div className="w-full flex notebook:flex-row flex-col gap-16 mb-20">
                             <div className="notebook:w-1/3 w-full mx-auto">
                                 <img
-                                    src={imagesURL + 'w780' + movie.poster_path}
+                                    src={movie.poster_path ? imagesURL + 'w780' + movie.poster_path : `https://placehold.co/780x1170/e5e5e5/18181b?text=${encodeURIComponent(movie.title)}`}
                                     className="max-w-[420px] w-full mx-auto h-auto rounded-lg"
-                                    alt=""
+                                    alt={movie.title}
+                                    title={movie.title}
                                 />
                                 <div className="mt-5 flex flex-row gap-5 items-center justify-center">
                                     <div className="w-24 h-24">
@@ -175,7 +176,7 @@ export function Movie() {
                                             Origem
                                         </span>
                                         <span>
-                                            {movie.production_countries[0].name} | {movie.production_countries[0].iso_3166_1}
+                                            {movie.production_countries.length > 0 ? movie.production_countries[0].name : "???"} | {movie.production_countries.length > 0 ? movie.production_countries[0].iso_3166_1 : "???"}
                                         </span>
                                     </div>
                                     <div className="flex flex-row justify-between items-center py-4">

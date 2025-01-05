@@ -5,7 +5,7 @@ const apiKey = import.meta.env.VITE_API_KEY;
 const searchURL = import.meta.env.VITE_SEARCH;
 const discovery = import.meta.env.VITE_DISCOVERY;
 
-import { Card } from "./Card";
+import { Card, MovieProps } from "./Card";
 import { PlaceholderCard } from "./Placeholder";
 
 interface ListMoviesProps {
@@ -15,38 +15,55 @@ interface ListMoviesProps {
     genres?: number | string;
 }
 
+interface ResponseProps {
+    dates?: Array<any>;
+    page: number;
+    results: Array<MovieProps>;
+    total_pages: number;
+    total_results: number;
+}
+
 export function ListMovies(props: ListMoviesProps) {
-    const [topMovies, setTopMovies] = useState([]);
-    const [searchMovies, setSearchMovies] = useState([]);
-    const [moviesByCategory, setMoviesByCategory] = useState([]);
+    const [topMovies, setTopMovies] = useState({} as ResponseProps);
+    const [searchMovies, setSearchMovies] = useState({} as ResponseProps);
+    const [moviesByCategory, setMoviesByCategory] = useState(
+        {} as ResponseProps
+    );
+    const [paginated, setPaginated] = useState<number>(1);
 
     const getTopMovies = async (url: RequestInfo | URL) => {
         const res = await fetch(url);
         const data = await res.json();
 
-        setTopMovies(data.results);
+        if (data.success && data.success == false)
+            setTopMovies({} as ResponseProps);
+        else setTopMovies(data);
     };
 
     const getSearchedMovies = async (url: RequestInfo | URL) => {
         const res = await fetch(url);
         const data = await res.json();
 
-        setSearchMovies(data.results)
+        if (data.success && data.success == false)
+            setSearchMovies({} as ResponseProps);
+        else setSearchMovies(data);
     };
 
     const getMoviesByCategory = async (url: RequestInfo | URL) => {
         const res = await fetch(url);
         const data = await res.json();
 
-        setMoviesByCategory(data.results)
+        if (data.success && data.success == false)
+            setMoviesByCategory({} as ResponseProps);
+        else setMoviesByCategory(data);
     };
 
     useEffect(() => {
         if (props.type_list) {
-            const topRatedUrl = `${moviesURL}${props.type_list}?${apiKey}&language=pt-BR&region=BR`;
-            getTopMovies(topRatedUrl)
+            const topRatedUrl = `${moviesURL}${props.type_list}?${apiKey}&language=pt-BR&region=BR&page=${paginated}`;
+            getTopMovies(topRatedUrl);
         }
-    }, [props.type_list]);
+    }, [props.type_list, paginated]);
 
     useEffect(() => {
         if (props.query) {
@@ -56,34 +73,57 @@ export function ListMovies(props: ListMoviesProps) {
     }, [props.query]);
 
     useEffect(() => {
-        if(props.genres) {
-            const currentCategoryURL = `${discovery}?${apiKey}&language=pt-BR&region=BR${props.genres ? '&with_genres=' + props.genres : ''}`;
+        if (props.genres) {
+            const currentCategoryURL = `${discovery}?${apiKey}&language=pt-BR&region=BR${
+                props.genres ? "&with_genres=" + props.genres : ""
+            }`;
             getMoviesByCategory(currentCategoryURL);
         }
     }, [props.genres]);
 
     return (
         <>
-            <h1 className="text-2xl mb-5 text-zinc-600 font-semibold">{props.title}</h1>
+            <h1 className="text-2xl mb-5 text-zinc-600 font-semibold">
+                {props.title}
+            </h1>
             <div className="flex flex-row flex-wrap -mx-3 gap-y-7">
-                {props.query ?
-                    searchMovies.length > 0 && searchMovies.map((movie, key) => <Card key={key} movie={movie} />)
-                    : props.type_list ?
-                        topMovies.length > 0 && topMovies.map((movie, key) => <Card key={key} movie={movie} />)
-                        : props.genres &&
-                        moviesByCategory.length > 0 && moviesByCategory.map((movie, key) => <Card key={key} movie={movie} />)
-                }
-                {searchMovies.length < 1 && props.query ?
+                {props.query
+                    ? searchMovies.results.length > 0 &&
+                      searchMovies.results.map((item, key) => (
+                          <Card key={key} movie={item} />
+                      ))
+                    : props.type_list
+                    ? topMovies.results &&
+                      topMovies.results.length > 0 &&
+                      topMovies.results.map((item, key) => (
+                          <Card key={key} movie={item} />
+                      ))
+                    : props.genres &&
+                      moviesByCategory.results.length > 0 &&
+                      moviesByCategory.results.map((item, key) => (
+                          <Card key={key} movie={item} />
+                      ))}
+                {Object.keys(searchMovies).length > 0 &&
+                searchMovies.results.length < 1 &&
+                props.query ? (
                     <div className="mx-3">
-                        <p>Não foram encontrados filmes que correspondam aos seus critérios de busca.</p>
+                        <p>
+                            Não foram encontrados filmes que correspondam aos
+                            seus critérios de busca.
+                        </p>
                     </div>
-                    : topMovies && topMovies.length === 0 && moviesByCategory && moviesByCategory.length === 0 &&
-                    <>
-                        {[...Array(8)].map((i, k) => {
-                            return <PlaceholderCard key={k} />
-                        })}
-                    </>
-                }
+                ) : (
+                    topMovies.results &&
+                    topMovies.results.length === 0 &&
+                    moviesByCategory.results &&
+                    moviesByCategory.results.length === 0 && (
+                        <>
+                            {[...Array(8)].map((i, k) => {
+                                return <PlaceholderCard key={k} />;
+                            })}
+                        </>
+                    )
+                )}
             </div>
         </>
     );
