@@ -120,9 +120,7 @@ export function ListMovies(props: ListMoviesProps) {
                       ))
                 }
 
-                {Object.keys(searchMovies).length > 0 &&
-                searchMovies.results.length < 1 &&
-                props.query ? (
+                {props.query && !searchMovies || props.query && searchMovies && searchMovies.results.length === 0 ? (
                     <div className="mx-3">
                         <p>
                             Não foram encontrados filmes que correspondam aos
